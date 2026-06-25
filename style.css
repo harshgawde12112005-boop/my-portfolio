@@ -1,5 +1,5 @@
 :root {
-    --bg-deep: #000000; /* Pure Black Screen Context */
+    --bg-deep: #000000;
     --bg-glass-matte: rgba(10, 10, 15, 0.55);
     --border-cyber: rgba(0, 229, 255, 0.12);
     --accent-cyan: #00e5ff;
@@ -87,12 +87,15 @@ body {
     border-left: 2px solid var(--accent-purple);
 }
 
-/* Fluid Slide Transitions Framework */
+/* ==========================================================================
+   STABLE SLIDER ARCHITECTURE (FIXED BLANK SCREEN BUG)
+   ========================================================================== */
 .slider-viewport {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     position: relative;
+    perspective: 1400px; /* Highly-stable spatial depth perspective */
 }
 
 .slider-wrapper {
@@ -113,7 +116,7 @@ body {
     justify-content: center;
     padding: 0 10%;
     opacity: 0;
-    transform: perspective(1400px) translateY(40px) scale(0.95) rotateX(5deg);
+    transform: perspective(1400px) translateY(40px) scale(0.95) rotateX(4deg);
     transition: opacity 1.2s cubic-bezier(0.77, 0, 0.175, 1), transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
@@ -159,9 +162,7 @@ body {
 .dashboard-stat h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; }
 .dashboard-stat p { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; }
 
-/* ==========================================================================
-   HIGH-END NEON CYBERNETIC AVATAR FRAME ARCHITECTURE
-   ========================================================================== */
+/* Cyber Photo Frame Architecture */
 .cyber-avatar-frame { 
     position: relative; 
     width: 360px; 
@@ -176,7 +177,6 @@ body {
     box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
-/* Pulsing Aura Behind Image Container */
 .glow-track-underlay {
     position: absolute;
     width: 290px;
@@ -191,7 +191,6 @@ body {
     100% { transform: scale(1.06); opacity: 1; filter: blur(5px); }
 }
 
-/* Rotating Neon Infinite Matrix Border Ring */
 .avatar-mask { 
     width: 285px; 
     height: 285px; 
@@ -204,7 +203,7 @@ body {
     position: relative;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
 }
-/* Linear Gradient Simulated Border Layer */
+
 .avatar-mask::before {
     content: '';
     position: absolute;
@@ -236,7 +235,6 @@ body {
 .ring-2 { width: 345px; height: 345px; border: 1px solid rgba(122,0,255,0.05); animation: loopRotationMatrix 20s linear reverse infinite; }
 @keyframes loopRotationMatrix { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* Industrial Cyber Tech Corner Accents */
 .frame-corner {
     position: absolute;
     width: 16px;
