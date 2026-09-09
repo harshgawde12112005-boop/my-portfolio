@@ -162,7 +162,7 @@ class KineticSpaceNode {
             let dx = this.x - cursor.x;
             let dy = this.y - cursor.y;
             let distance = Math.hypot(dx, dy);
-            let repulsionRadius = 150; 
+            let repulsionRadius = 180; 
 
             if (distance < repulsionRadius) {
                 let force = (repulsionRadius - distance) / repulsionRadius;
@@ -183,7 +183,7 @@ class KineticSpaceNode {
     }
 }
 
-for (let i = 0; i < 65; i++) {
+for (let i = 0; i < 90; i++) {
     nodeArray.push(new KineticSpaceNode());
 }
 
