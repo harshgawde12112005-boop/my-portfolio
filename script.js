@@ -598,30 +598,22 @@ window.toggleMusicMute = function() {
     const waves = document.getElementById("radioWaves");
 
     if (audio) {
-        if (audio.paused) {
-            audio.volume = 0.65;
-            audio.muted = false;
-            audio.play().then(() => {
-                if (muteBtn) muteBtn.classList.remove("muted");
-                if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
-                if (muteLabel) muteLabel.textContent = "MUTE";
-                if (waves) waves.classList.add("playing");
-                hideAudioHint();
-            }).catch(() => {});
-        } else {
-            audio.muted = !audio.muted;
-            if (audio.muted) {
-                if (muteBtn) muteBtn.classList.add("muted");
-                if (muteIcon) muteIcon.className = "fa-solid fa-volume-xmark";
-                if (muteLabel) muteLabel.textContent = "UNMUTE";
-                if (waves) waves.classList.remove("playing");
+        audio.volume = 0.65;
+        audio.muted = !audio.muted;
+
+        const isMuted = audio.muted;
+        if (muteBtn) muteBtn.classList.toggle("muted", isMuted);
+        if (muteIcon) muteIcon.className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+        if (muteLabel) muteLabel.textContent = isMuted ? "UNMUTE" : "MUTE";
+
+        if (waves) {
+            if (isMuted || audio.paused) {
+                waves.classList.remove("playing");
             } else {
-                if (muteBtn) muteBtn.classList.remove("muted");
-                if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
-                if (muteLabel) muteLabel.textContent = "MUTE";
-                if (waves) waves.classList.add("playing");
+                waves.classList.add("playing");
             }
         }
+
         radio.playSelectSound();
     } else {
         radio.toggle();
