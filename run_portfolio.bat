@@ -1,9 +1,11 @@
 @echo off
-title Launching Harsh Gawde GTA VI Portfolio
+title Harsh Gawde // GTA VI Vice City Cinematic Portfolio
 echo ========================================================
 echo   HARSH GAWDE // GTA VI VICE CITY THEMED PORTFOLIO
+echo   Living Moving Video Clips & Atmospheric Engine Active
 echo ========================================================
-echo Opening portfolio in default browser...
-start "" "%~dp0index.html"
-echo Launched! Press any key to exit this launcher window.
-pause > nul
+echo Starting local Vite dev server and opening in browser...
+start http://localhost:5173/
+call npx vite --port 5173
+pause
+

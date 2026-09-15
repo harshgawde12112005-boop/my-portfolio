@@ -2,6 +2,7 @@
   "name": "harsh-gawde-gta-portfolio",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Harsh Gawde - GTA VI / Vice City Themed Developer Portfolio",
   "scripts": {
     "dev": "vite",
