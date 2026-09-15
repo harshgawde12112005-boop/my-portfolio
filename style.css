@@ -653,6 +653,18 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
     box-shadow: 0 0 15px rgba(245, 196, 0, 0.85);
 }
 
+.nav-arrow-btn.mute-hud-btn.muted {
+    background: rgba(255, 68, 68, 0.16);
+    border-color: rgba(255, 68, 68, 0.6);
+    color: #ff5555;
+}
+
+.nav-arrow-btn.mute-hud-btn.muted:hover {
+    background: #ff4444;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.85);
+}
+
 .reel-controls-bar kbd {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(245, 196, 0, 0.6);

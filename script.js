@@ -595,90 +595,101 @@ window.toggleMusicMute = function() {
     const muteBtn = document.getElementById("reelMuteBtn");
     const muteIcon = document.getElementById("muteIcon");
     const muteLabel = document.getElementById("muteLabel");
+    const hudMuteBtn = document.getElementById("hudMuteBtn") || document.querySelector(".mute-hud-btn");
     const waves = document.getElementById("radioWaves");
+    const pill = document.getElementById("reelRadioPill");
 
-    if (audio) {
-        audio.volume = 0.65;
-        audio.muted = !audio.muted;
+    if (!audio) return;
 
-        const isMuted = audio.muted;
-        if (muteBtn) muteBtn.classList.toggle("muted", isMuted);
-        if (muteIcon) muteIcon.className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
-        if (muteLabel) muteLabel.textContent = isMuted ? "UNMUTE" : "MUTE";
+    // Determine current mute/playing state
+    const willMute = !audio.muted && !audio.paused;
 
-        if (waves) {
-            if (isMuted || audio.paused) {
-                waves.classList.remove("playing");
-            } else {
-                waves.classList.add("playing");
-            }
+    if (willMute) {
+        // User wants to MUTE
+        audio.muted = true;
+        audio.pause();
+        if (window.radio) {
+            window.radio.stop();
+            if (window.radio.masterGain) window.radio.masterGain.gain.value = 0;
         }
 
-        radio.playSelectSound();
+        if (muteBtn) muteBtn.classList.add("muted");
+        if (muteIcon) muteIcon.className = "fa-solid fa-volume-xmark";
+        if (muteLabel) muteLabel.textContent = "UNMUTE";
+        if (hudMuteBtn) {
+            hudMuteBtn.innerHTML = '<kbd>M</kbd> UNMUTE';
+            hudMuteBtn.classList.add("muted");
+        }
+        if (waves) waves.classList.remove("playing");
+        if (pill) {
+            pill.classList.remove("playing");
+            pill.classList.remove("active");
+        }
     } else {
-        radio.toggle();
-        const isMuted = !radio.isPlaying;
-        if (muteBtn) muteBtn.classList.toggle("muted", isMuted);
-        if (muteIcon) muteIcon.className = isMuted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
-        if (muteLabel) muteLabel.textContent = isMuted ? "UNMUTE" : "MUTE";
+        // User wants to UNMUTE / PLAY
+        audio.muted = false;
+        audio.volume = 0.65;
+        if (window.radio && window.radio.masterGain) {
+            window.radio.masterGain.gain.value = 0.45;
+        }
+
+        audio.play().then(() => {
+            if (muteBtn) muteBtn.classList.remove("muted");
+            if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
+            if (muteLabel) muteLabel.textContent = "MUTE";
+            if (hudMuteBtn) {
+                hudMuteBtn.innerHTML = '<kbd>M</kbd> RADIO';
+                hudMuteBtn.classList.remove("muted");
+            }
+            if (waves) waves.classList.add("playing");
+            if (pill) {
+                pill.classList.add("playing");
+                pill.classList.add("active");
+            }
+            hideAudioHint();
+        }).catch(err => {
+            console.warn("Audio playback issue:", err);
+            if (muteBtn) muteBtn.classList.remove("muted");
+            if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
+            if (muteLabel) muteLabel.textContent = "MUTE";
+            if (hudMuteBtn) hudMuteBtn.innerHTML = '<kbd>M</kbd> RADIO';
+        });
+
+        if (window.radio) window.radio.playSelectSound();
     }
 };
 
 window.toggleViceCityRadio = function() {
-    const audio = document.getElementById("gtaThemeAudio");
-    const waves = document.getElementById("radioWaves");
-    const pill = document.getElementById("reelRadioPill");
-    const muteBtn = document.getElementById("reelMuteBtn");
-    const muteIcon = document.getElementById("muteIcon");
-    const muteLabel = document.getElementById("muteLabel");
-
-    if (audio) {
-        if (audio.paused) {
-            audio.volume = 0.65;
-            audio.muted = false;
-            audio.play().then(() => {
-                if (waves) waves.classList.add("playing");
-                if (pill) pill.classList.add("active");
-                if (muteBtn) muteBtn.classList.remove("muted");
-                if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
-                if (muteLabel) muteLabel.textContent = "MUTE";
-                hideAudioHint();
-            }).catch(e => {
-                console.log("Audio play fallback to synthwave:", e);
-                radio.start();
-                hideAudioHint();
-            });
-        } else {
-            audio.pause();
-            if (waves) waves.classList.remove("playing");
-            if (pill) pill.classList.remove("active");
-            if (muteBtn) muteBtn.classList.add("muted");
-            if (muteIcon) muteIcon.className = "fa-solid fa-volume-xmark";
-            if (muteLabel) muteLabel.textContent = "UNMUTE";
-        }
-    } else {
-        radio.toggle();
-        hideAudioHint();
-    }
+    window.toggleMusicMute();
 };
 
 window.startAudioAndHideBanner = function() {
     const audio = document.getElementById("gtaThemeAudio");
     const waves = document.getElementById("radioWaves");
     const pill = document.getElementById("reelRadioPill");
+    const muteBtn = document.getElementById("reelMuteBtn");
+    const muteIcon = document.getElementById("muteIcon");
+    const muteLabel = document.getElementById("muteLabel");
+    const hudMuteBtn = document.getElementById("hudMuteBtn") || document.querySelector(".mute-hud-btn");
 
     if (audio) {
         audio.volume = 0.65;
+        audio.muted = false;
         audio.play().then(() => {
             if (waves) waves.classList.add("playing");
-            if (pill) pill.classList.add("active");
+            if (pill) {
+                pill.classList.add("playing");
+                pill.classList.add("active");
+            }
+            if (muteBtn) muteBtn.classList.remove("muted");
+            if (muteIcon) muteIcon.className = "fa-solid fa-volume-high";
+            if (muteLabel) muteLabel.textContent = "MUTE";
+            if (hudMuteBtn) hudMuteBtn.innerHTML = '<kbd>M</kbd> RADIO';
             hideAudioHint();
-        }).catch(e => {
-            radio.start();
+        }).catch(() => {
             hideAudioHint();
         });
     } else {
-        radio.start();
         hideAudioHint();
     }
 };
@@ -690,9 +701,9 @@ function hideAudioHint() {
 
 // First interaction on page starts the official GTA Theme
 document.addEventListener("click", () => {
-    radio.init();
+    if (window.radio) window.radio.init();
     const audio = document.getElementById("gtaThemeAudio");
-    if (audio && audio.paused) {
+    if (audio && audio.paused && !audio.muted) {
         audio.volume = 0.65;
         audio.play().then(() => {
             const waves = document.getElementById("radioWaves");
@@ -2447,9 +2458,11 @@ class CinematicReelDirector {
         this.isPlaying = true;
         this.updateSceneStamp();
 
-        // Start Synthwave Audio for authentic soundtrack experience
-        if (window.radio && !window.radio.isPlaying) {
-            window.radio.start();
+        // Ensure official GTA theme song is playing if unmuted
+        const audio = document.getElementById("gtaThemeAudio");
+        if (audio && audio.paused && !audio.muted) {
+            audio.volume = 0.65;
+            audio.play().catch(() => {});
         }
 
         requestAnimationFrame(this.animate);
