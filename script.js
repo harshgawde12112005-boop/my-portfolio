@@ -2609,7 +2609,7 @@ window.seekReel = function(e) {
 // ========================================================
 // 11. GLOBAL INITIALIZATION
 // ========================================================
-document.addEventListener("DOMContentLoaded", () => {
+function initializePortfolio() {
     setupMainMenu();
     setupWeaponWheelSlots();
     setupGlobalControls();
@@ -2634,4 +2634,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     console.log("🎬 GTA VI Cinematic Moving Video Clips & Living World Engine Initialized!");
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializePortfolio);
+} else {
+    initializePortfolio();
+}
